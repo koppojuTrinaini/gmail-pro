@@ -32,7 +32,6 @@ app.post("/send-email", async (req, res) => {
         // Gmail Transport
 
         const transporter = nodemailer.createTransport({
-
             host: "smtp.gmail.com",
             port: 465,
             secure: true,
@@ -41,7 +40,6 @@ app.post("/send-email", async (req, res) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             }
-
         });
 
         // Send Multiple Emails
