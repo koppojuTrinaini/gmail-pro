@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Background Animation -->
+    <div class="background">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <h1>Email Sender</h1>
+        <p class="subtitle">
+            Send messages automatically multiple times
+        </p>
+
+        <!-- Form -->
+        <form id="emailForm">
+
+            <!-- Message -->
+            <div class="input-box">
+                <textarea 
+                    id="message"
+                    placeholder="Enter your message..."
+                    required
+                ></textarea>
+            </div>
+
+            <!-- Gmail -->
+            <div class="input-box">
+                <input 
+                    type="email"
+                    id="email"
+                    placeholder="Enter Gmail Address"
+                    required
+                >
+            </div>
+
+            <!-- Count -->
+            <div class="input-box">
+                <input 
+                    type="number"
+                    id="count"
+                    placeholder="How many times?"
+                    min="1"
+                    required
+                >
+            </div>
+
+            <!-- Button -->
+            <button type="submit">
+                Send Now
+            </button>
+
+        </form>
+
+        <!-- Status -->
+        <div id="status"></div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+
+</body>
+</html>
