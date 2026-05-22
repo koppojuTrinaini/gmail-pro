@@ -29,7 +29,7 @@ app.post("/send-email", async (req, res) => {
             });
         }
 
-        // Gmail Transport
+        // Brevo SMTP Transport
 
         const transporter = nodemailer.createTransport({
 
@@ -42,13 +42,15 @@ app.post("/send-email", async (req, res) => {
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
-            }
+            },
+
+            connectionTimeout: 10000
 
         });
 
         // Send Multiple Emails
 
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < Number(count); i++) {
 
             await transporter.sendMail({
 
@@ -70,10 +72,11 @@ app.post("/send-email", async (req, res) => {
 
     } catch (error) {
 
+        console.log("FULL ERROR:");
         console.log(error);
 
         res.status(500).json({
-            error: "Failed to send emails"
+            error: error.message
         });
 
     }
