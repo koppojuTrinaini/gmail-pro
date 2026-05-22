@@ -1,5 +1,5 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
+const axios = require("axios");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -7,13 +7,9 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-/* Middleware */
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
-
-/* Route */
 
 app.post("/send-email", async (req, res) => {
 
@@ -21,48 +17,39 @@ app.post("/send-email", async (req, res) => {
 
         const { message, email, count } = req.body;
 
-        // Validation
-
         if (!message || !email || !count) {
             return res.status(400).json({
                 error: "All fields are required"
             });
         }
 
-        // Brevo SMTP Transport
-
-        const transporter = nodemailer.createTransport({
-
-            host: "smtp-relay.brevo.com",
-
-            port: 587,
-
-            secure: false,
-
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            },
-
-            connectionTimeout: 10000
-
-        });
-
-        // Send Multiple Emails
-
         for (let i = 0; i < Number(count); i++) {
 
-            await transporter.sendMail({
+            await axios.post(
+                "https://api.brevo.com/v3/smtp/email",
+                {
+                    sender: {
+                        name: "Gmail Pro",
+                        email: process.env.EMAIL_USER
+                    },
 
-                from: process.env.EMAIL_USER,
+                    to: [
+                        {
+                            email: email
+                        }
+                    ],
 
-                to: email,
+                    subject: `Message ${i + 1}`,
 
-                subject: `Message ${i + 1}`,
-
-                text: message
-
-            });
+                    textContent: message
+                },
+                {
+                    headers: {
+                        "api-key": process.env.BREVO_API_KEY,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
 
         }
 
@@ -73,17 +60,15 @@ app.post("/send-email", async (req, res) => {
     } catch (error) {
 
         console.log("FULL ERROR:");
-        console.log(error);
+        console.log(error.response?.data || error.message);
 
         res.status(500).json({
-            error: error.message
+            error: "Failed to send emails"
         });
 
     }
 
 });
-
-/* Start Server */
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
